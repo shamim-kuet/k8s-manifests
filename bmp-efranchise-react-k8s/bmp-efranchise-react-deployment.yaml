@@ -6,7 +6,7 @@ metadata:
   labels:
     app: eks-bmp-efranchise-react
 spec:
-  replicas: 2
+  # replicas: 2
   selector:
     matchLabels:
       app: eks-bmp-efranchise-react
