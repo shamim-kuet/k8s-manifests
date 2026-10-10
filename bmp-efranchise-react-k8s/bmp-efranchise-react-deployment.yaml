@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-bmp-efranchise-react-deployment
+  namespace: dev
+  labels:
+    app: eks-bmp-efranchise-react
+spec:
+  # replicas: 2
+  selector:
+    matchLabels:
+      app: eks-bmp-efranchise-react
+  template:
+    metadata:
+      labels:
+        app: eks-bmp-efranchise-react
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - eks-bmp-efranchise-react
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: eks-bmp-efranchise-react
+          image: CONTAINER_IMAGE
+          # image: 298398654240.dkr.ecr.eu-west-2.amazonaws.com/bmp-efranchise-react-app-ecr:cb52ee3
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"

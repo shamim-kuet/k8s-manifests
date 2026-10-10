@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-bmp-new-api-deployment
+  namespace: dev
+  labels:
+    app: eks-bmp-new-api
+spec:
+  # replicas: 3
+  selector:
+    matchLabels:
+      app: eks-bmp-new-api
+  template:
+    metadata:
+      labels:
+        app: eks-bmp-new-api
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - eks-bmp-new-api
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: eks-bmp-new-api
+          image: CONTAINER_IMAGE
+          # image: 298398654240.dkr.ecr.eu-west-2.amazonaws.com/bmp-new-api-app-ecr:863e211
+          ports:
+            - containerPort: 80
+            # - containerPort: 8000
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "500Mi"
+            limits:
+              cpu: "512m"
+              memory: "1000Mi"

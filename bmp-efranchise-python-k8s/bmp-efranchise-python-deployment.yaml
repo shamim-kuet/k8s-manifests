@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-bmp-efranchise-python-deployment
+  namespace: dev
+  labels:
+    app: eks-bmp-efranchise-python
+spec:
+  # replicas: 2
+  selector:
+    matchLabels:
+      app: eks-bmp-efranchise-python
+  template:
+    metadata:
+      labels:
+        app: eks-bmp-efranchise-python
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - eks-bmp-efranchise-python
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: eks-bmp-efranchise-python
+          image: CONTAINER_IMAGE
+          # image: 298398654240.dkr.ecr.eu-west-2.amazonaws.com/bmp-efranchise-python-app-ecr:795c0a2
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "500Mi"
+            limits:
+              cpu: "512m"
+              memory: "1000Mi"

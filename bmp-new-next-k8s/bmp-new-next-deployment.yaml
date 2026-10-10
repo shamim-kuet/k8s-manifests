@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-bmp-new-next-deployment
+  namespace: dev
+  labels:
+    app: eks-bmp-new-next
+spec:
+  # replicas: 3
+  selector:
+    matchLabels:
+      app: eks-bmp-new-next
+  template:
+    metadata:
+      labels:
+        app: eks-bmp-new-next
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - eks-bmp-new-next
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: eks-bmp-new-next
+          image: CONTAINER_IMAGE
+          # image: 298398654240.dkr.ecr.eu-west-2.amazonaws.com/bmp-new-next-app-ecr:2eec547
+          ports:
+            - containerPort: 80
+            # - containerPort: 3000
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "500Mi"
+            limits:
+              cpu: "512m"
+              memory: "1000Mi"
