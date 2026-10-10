@@ -6,7 +6,7 @@ metadata:
   labels:
     app: eks-bmp-new-api
 spec:
-  # replicas: 3
+  replicas: 3
   selector:
     matchLabels:
       app: eks-bmp-new-api
@@ -41,3 +41,22 @@ spec:
             limits:
               cpu: "512m"
               memory: "1000Mi"
+          # readinessProbe:
+          #   httpGet:
+          #     path: /v1/dakpion/health
+          #     port: 8080
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
+          #   timeoutSeconds: 2
+          #   # successThreshold: 1
+          #   failureThreshold: 3
+          # livenessProbe:
+          #   httpGet:
+          #     path: /v1/dakpion/health
+          #     port: 8080
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
+          #   timeoutSeconds: 2
+          #   # successThreshold: 1
+          #   failureThreshold: 3
+      restartPolicy: Always
